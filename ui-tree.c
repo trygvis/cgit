@@ -6,10 +6,10 @@
  *   (see COPYING for full license text)
  */
 
-#include <ctype.h>
 #include "cgit.h"
 #include "html.h"
 #include "ui-shared.h"
+#include <ctype.h>
 
 char *curr_rev;
 char *match_path;

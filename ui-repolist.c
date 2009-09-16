@@ -6,15 +6,15 @@
  *   (see COPYING for full license text)
  */
 
+#include "cgit.h"
+#include "html.h"
+#include "ui-shared.h"
+
 /* This is needed for strcasestr to be defined by <string.h> */
 #define _GNU_SOURCE 1
 #include <string.h>
 
 #include <time.h>
-
-#include "cgit.h"
-#include "html.h"
-#include "ui-shared.h"
 
 time_t read_agefile(char *path)
 {
