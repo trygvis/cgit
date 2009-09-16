@@ -68,7 +68,7 @@ endif
 	$(QUIET_CC)$(CC) -o $*.o -c $(CFLAGS) $<
 
 
-EXTLIBS = git/libgit.a git/xdiff/lib.a -lz -lcrypto
+EXTLIBS += git/libgit.a git/xdiff/lib.a -lz -lcrypto
 OBJECTS =
 OBJECTS += cache.o
 OBJECTS += cgit.o
@@ -110,7 +110,7 @@ VERSION: force-version
 -include VERSION
 
 
-CFLAGS += -g -Wall -Igit
+CFLAGS ?= -g -Wall -Igit
 CFLAGS += -DSHA1_HEADER='$(SHA1_HEADER)'
 CFLAGS += -DCGIT_VERSION='"$(CGIT_VERSION)"'
 CFLAGS += -DCGIT_CONFIG='"$(CGIT_CONFIG)"'
