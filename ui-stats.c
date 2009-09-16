@@ -15,6 +15,44 @@ struct authorstat {
 #define DAY_SECS (60 * 60 * 24)
 #define WEEK_SECS (DAY_SECS * 7)
 
+/*
+ * This snippet was taken from http://www.mail-archive.com/qemu-devel@nongnu.org/msg13689.html
+ */
+
+#ifdef __sun__
+/*
+ * On solaris no timegm function exists,
+ * we must implement it here
+ */
+time_t timegm(struct tm *t)
+{
+    time_t tl, tb;
+    struct tm *tg;
+
+    tl = mktime (t);
+     if (tl == -1)
+    {
+        t->tm_hour--;
+        tl = mktime (t);
+        if (tl == -1)
+            return -1; /* can't deal with output from strptime */
+        tl += 3600;
+    }
+    tg = gmtime (&tl);
+    tg->tm_isdst = 0;
+    tb = mktime (tg);
+    if (tb == -1)
+    {
+        tg->tm_hour--;
+        tb = mktime (tg);
+        if (tb == -1)
+            return -1; /* can't deal with output from gmtime */
+        tb += 3600;
+    }
+    return (tl - (tb - tl));
+}
+#endif
+
 static void trunc_week(struct tm *tm)
 {
 	time_t t = timegm(tm);
@@ -415,4 +453,3 @@ void cgit_show_stats(struct cgit_context *ctx)
 	html("</form>");
 	print_authors(&authors, top, period);
 }
-
