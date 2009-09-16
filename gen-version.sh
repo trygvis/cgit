@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Get version-info specified in Makefile
 V=$1
