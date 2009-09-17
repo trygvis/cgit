@@ -19,7 +19,7 @@ struct authorstat {
  * This snippet was taken from http://www.mail-archive.com/qemu-devel@nongnu.org/msg13689.html
  */
 
-#ifdef __sun__
+#ifdef __sun
 /*
  * On solaris no timegm function exists,
  * we must implement it here
