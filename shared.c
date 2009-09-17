@@ -169,10 +169,10 @@ struct refinfo *cgit_mk_refinfo(const char *refname, const unsigned char *sha1)
 	ref->object = parse_object(sha1);
 	switch (ref->object->type) {
 	case OBJ_TAG:
-		ref->tag = cgit_parse_tag((struct tag *)ref->object);
+		ref->info.tag = cgit_parse_tag((struct tag *)ref->object);
 		break;
 	case OBJ_COMMIT:
-		ref->commit = cgit_parse_commit((struct commit *)ref->object);
+		ref->info.commit = cgit_parse_commit((struct commit *)ref->object);
 		break;
 	}
 	return ref;

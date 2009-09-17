@@ -39,7 +39,7 @@ static int cmp_branch_age(const void *a, const void *b)
 	struct refinfo *r1 = *(struct refinfo **)a;
 	struct refinfo *r2 = *(struct refinfo **)b;
 
-	return cmp_age(r1->commit->committer_date, r2->commit->committer_date);
+	return cmp_age(r1->info.commit->committer_date, r2->info.commit->committer_date);
 }
 
 static int cmp_tag_age(const void *a, const void *b)
@@ -49,21 +49,21 @@ static int cmp_tag_age(const void *a, const void *b)
 	int r1date, r2date;
 
 	if (r1->object->type != OBJ_COMMIT)
-		r1date = r1->tag->tagger_date;
+		r1date = r1->info.tag->tagger_date;
 	else
-		r1date = r1->commit->committer_date;
+		r1date = r1->info.commit->committer_date;
 
 	if (r2->object->type != OBJ_COMMIT)
-		r2date = r2->tag->tagger_date;
+		r2date = r2->info.tag->tagger_date;
 	else
-		r2date = r2->commit->committer_date;
+		r2date = r2->info.commit->committer_date;
 
 	return cmp_age(r1date, r2date);
 }
 
 static int print_branch(struct refinfo *ref)
 {
-	struct commitinfo *info = ref->commit;
+	struct commitinfo *info = ref->info.commit;
 	char *name = (char *)ref->refname;
 
 	if (!info)
@@ -129,7 +129,7 @@ static int print_tag(struct refinfo *ref)
 
 	if (ref->object->type == OBJ_TAG) {
 		tag = (struct tag *)ref->object;
-		info = ref->tag;
+		info = ref->info.tag;
 		if (!tag || !info)
 			return 1;
 		html("<tr><td>");
@@ -158,10 +158,10 @@ static int print_tag(struct refinfo *ref)
 			cgit_object_link(ref->object);
 		html("</td><td>");
 		if (ref->object->type == OBJ_COMMIT)
-			html(ref->commit->author);
+			html(ref->info.commit->author);
 		html("</td><td colspan='2'>");
 		if (ref->object->type == OBJ_COMMIT)
-			cgit_print_age(ref->commit->commit->date, -1, NULL);
+			cgit_print_age(ref->info.commit->commit->date, -1, NULL);
 		html("</td></tr>\n");
 	}
 	return 0;

@@ -114,7 +114,7 @@ struct refinfo {
 	union {
 		struct taginfo *tag;
 		struct commitinfo *commit;
-	};
+	} info;
 };
 
 struct reflist {
