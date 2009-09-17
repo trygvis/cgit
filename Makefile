@@ -58,8 +58,9 @@ endif
 #
 # Define a pattern rule for automatic dependency building
 #
+MMFLAGS ?= -MM
 %.d: %.c
-	$(QUIET_MM)$(CC) $(CFLAGS) -MM $< | sed -e 's/\($*\)\.o:/\1.o $@:/g' >$@
+	$(QUIET_MM)$(CC) $(CFLAGS) $(MMFLAGS) $< | sed -e 's/\($*\)\.o:/\1.o $@:/g' >$@
 
 #
 # Define a pattern rule for silent object building
@@ -68,7 +69,9 @@ endif
 	$(QUIET_CC)$(CC) -o $*.o -c $(CFLAGS) $<
 
 
-EXTLIBS += git/libgit.a git/xdiff/lib.a -lz -lcrypto
+EXTLIBS ?= git/libgit.a git/xdiff/lib.a
+EXTLIBS += -lz -lcrypto
+
 OBJECTS =
 OBJECTS += cache.o
 OBJECTS += cgit.o
@@ -109,7 +112,7 @@ VERSION: force-version
 	@./gen-version.sh "$(CGIT_VERSION)"
 -include VERSION
 
-
+# Defaults for GCC
 CFLAGS ?= -g -Wall -Igit
 CFLAGS += -DSHA1_HEADER='$(SHA1_HEADER)'
 CFLAGS += -DCGIT_VERSION='"$(CGIT_VERSION)"'
@@ -124,14 +127,16 @@ ifdef NO_STRCASESTR
 	CFLAGS += -DNO_STRCASESTR
 endif
 
-cgit: $(OBJECTS) libgit
+cgit: $(OBJECTS) $(LIBGIT_PATH)
 	$(QUIET_CC)$(CC) $(CFLAGS) $(LDFLAGS) -o cgit $(OBJECTS) $(EXTLIBS)
 
 cgit.o: VERSION
 
+LIBGIT_PATH ?= lib/libgit.a
+
 -include $(OBJECTS:.o=.d)
 
-libgit:
+$(LIBGIT_PATH):
 	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) NO_CURL=1 libgit.a
 	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) NO_CURL=1 xdiff/lib.a
 
