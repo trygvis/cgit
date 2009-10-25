@@ -30,6 +30,14 @@ static void print_tag_content(char *buf)
 	}
 }
 
+void print_download_links(char *revname)
+{
+	html("<tr><th>download</th><td class='sha1'>");
+	cgit_print_snapshot_links(ctx.qry.repo, ctx.qry.head,
+				  revname, ctx.repo->snapshots);
+	html("</td></tr>");
+}
+
 void cgit_print_tag(char *revname)
 {
 	unsigned char sha1[20];
@@ -56,16 +64,16 @@ void cgit_print_tag(char *revname)
 			return;
 		}
 		html("<table class='commit-info'>\n");
-		htmlf("<tr><td>Tag name</td><td>");
+		htmlf("<tr><td>tag name</td><td>");
 		html_txt(revname);
 		htmlf(" (%s)</td></tr>\n", sha1_to_hex(sha1));
 		if (info->tagger_date > 0) {
-			html("<tr><td>Tag date</td><td>");
+			html("<tr><td>tag date</td><td>");
 			cgit_print_date(info->tagger_date, FMT_LONGDATE, ctx.cfg.local_time);
 			html("</td></tr>\n");
 		}
 		if (info->tagger) {
-			html("<tr><td>Tagged by</td><td>");
+			html("<tr><td>tagged by</td><td>");
 			html_txt(info->tagger);
 			if (info->tagger_email && !ctx.cfg.noplainemail) {
 				html(" ");
@@ -73,19 +81,23 @@ void cgit_print_tag(char *revname)
 			}
 			html("</td></tr>\n");
 		}
-		html("<tr><td>Tagged object</td><td>");
+		html("<tr><td>tagged object</td><td class='sha1'>");
 		cgit_object_link(tag->tagged);
 		html("</td></tr>\n");
+		if (ctx.repo->snapshots)
+			print_download_links(revname);
 		html("</table>\n");
 		print_tag_content(info->msg);
 	} else {
 		html("<table class='commit-info'>\n");
-		htmlf("<tr><td>Tag name</td><td>");
+		htmlf("<tr><td>tag name</td><td>");
 		html_txt(revname);
 		html("</td></tr>\n");
-		html("<tr><td>Tagged object</td><td>");
+		html("<tr><td>Tagged object</td><td class='sha1'>");
 		cgit_object_link(obj);
 		html("</td></tr>\n");
+		if (ctx.repo->snapshots)
+			print_download_links(revname);
 		html("</table>\n");
         }
 	return;
