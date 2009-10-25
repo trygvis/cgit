@@ -3,7 +3,6 @@
 
 
 #define _FILE_OFFSET_BITS 64
-#include <stdlib.h>
 #include <git-compat-util.h>
 #include <cache.h>
 #include <grep.h>
